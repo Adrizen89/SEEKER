@@ -7,7 +7,7 @@ class ColorSelect {
   static Color darkColor = Color(0xffA69D8D);
   static Color lastColor = Color(0xffA6600A);
 
-  static Color grey100 = Color(0xffF7F7F7);
+  static const Color grey100 = Color(0xffF7F7F7);
   static Color grey200 = Color(0xffEBEBEB);
   static Color grey300 = Color(0xffD1D1D1);
   static Color grey400 = Color(0xffA6A6A6);
