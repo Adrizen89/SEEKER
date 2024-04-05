@@ -19,4 +19,6 @@ class ColorSelect {
   static Color focusFieldColor = Color(0xffD1D1D1);
   static Color errorFieldColor = Color(0xff);
   static Color normalFieldColor = Color(0xffEBEBEB);
+
+  static Color textClickColor = Color(0xff475956);
 }

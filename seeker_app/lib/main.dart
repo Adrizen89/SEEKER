@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:seeker_app/widgets/custom_buttons.dart';
+import 'package:seeker_app/widgets/custom_text.dart';
 
 void main() {
   runApp(const MyApp());
@@ -18,7 +18,7 @@ class MyApp extends StatelessWidget {
         ),
         home: Scaffold(
             body: Center(
-                child: CustomButtonSecondary(
-                    text: 'Se connecter', onPressed: () {}))));
+                child: CustomTextClick(
+                    onPressed: () {}, text: 'Mot de passe Oublié ?'))));
   }
 }
