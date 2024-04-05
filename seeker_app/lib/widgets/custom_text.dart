@@ -1,18 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:seeker_app/constants/colors.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class CustomTextClick extends StatelessWidget {
   final String text;
   final double? fontsize;
-  final VoidCallback onPressed;
 
-  const CustomTextClick(
-      {super.key, required this.text, required this.onPressed, this.fontsize});
+  const CustomTextClick({super.key, required this.text, this.fontsize});
 
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: onPressed,
       child: Text(
         text,
         style: TextStyle(
@@ -37,8 +35,8 @@ class CustomTitle extends StatelessWidget {
   Widget build(BuildContext context) {
     return Text(
       title,
-      style: TextStyle(
-          fontSize: fontsize, color: color, fontWeight: FontWeight.bold),
+      style: GoogleFonts.montserrat(
+          fontSize: fontsize, color: color, fontWeight: FontWeight.w700),
     );
   }
 }
