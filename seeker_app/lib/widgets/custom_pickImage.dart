@@ -4,6 +4,10 @@ import 'package:seeker_app/services/image_selector.dart';
 import 'package:image_picker/image_picker.dart';
 
 class ImagePickerCircle extends StatefulWidget {
+  final Function(File) onImageSelected;
+
+  ImagePickerCircle({required this.onImageSelected});
+
   @override
   _ImagePickerCircleState createState() => _ImagePickerCircleState();
 }
@@ -12,38 +16,19 @@ class _ImagePickerCircleState extends State<ImagePickerCircle> {
   File? _image;
   final ImageSelector _imageSelector = ImageSelector();
 
-  void _pickImage() async {
-    // Affiche un menu de choix : Galerie ou Caméra
-    showModalBottomSheet(
-      context: context,
-      builder: (BuildContext context) {
-        return SafeArea(
-          child: Wrap(
-            children: <Widget>[
-              ListTile(
-                  leading: Icon(Icons.photo_library),
-                  title: Text('Galerie'),
-                  onTap: () async {
-                    var image =
-                        await _imageSelector.pickImage(ImageSource.gallery);
-                    setState(() => _image = image);
-                    Navigator.of(context).pop();
-                  }),
-              ListTile(
-                leading: Icon(Icons.photo_camera),
-                title: Text('Caméra'),
-                onTap: () async {
-                  var image =
-                      await _imageSelector.pickImage(ImageSource.camera);
-                  setState(() => _image = image);
-                  Navigator.of(context).pop();
-                },
-              ),
-            ],
-          ),
-        );
-      },
-    );
+  Future<void> _pickImage() async {
+    final ImagePicker picker = ImagePicker();
+    final XFile? pickedFile =
+        await picker.pickImage(source: ImageSource.gallery);
+
+    if (pickedFile != null) {
+      setState(() {
+        _image = File(pickedFile.path);
+      });
+      print("Image sélectionnée : ${_image!.path}");
+    } else {
+      print("Aucune image sélectionnée.");
+    }
   }
 
   @override
