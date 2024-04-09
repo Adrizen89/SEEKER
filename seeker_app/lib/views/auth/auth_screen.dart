@@ -3,8 +3,8 @@ import 'package:seeker_app/constants/colors.dart';
 import 'package:seeker_app/constants/size.dart';
 import 'package:seeker_app/models/user_model.dart';
 import 'package:seeker_app/services/auth/auth_service.dart';
+import 'package:seeker_app/services/image_selector.dart';
 import 'package:seeker_app/widgets/custom_buttons.dart';
-import 'package:seeker_app/widgets/custom_pickImage.dart';
 import 'package:seeker_app/widgets/custom_text.dart';
 import 'package:seeker_app/widgets/custom_textfield.dart';
 import 'package:seeker_app/constants/assets.dart';
@@ -25,7 +25,12 @@ class _AuthScreenState extends State<AuthScreen> {
   final TextEditingController _lastNameController = TextEditingController();
   final TextEditingController _firstNameController = TextEditingController();
   final TextEditingController _biographyController = TextEditingController();
-  File? _selectedImageFile;
+  final TextEditingController _dateNaissanceController =
+      TextEditingController();
+
+  final ImageSelector _imageSelector = ImageSelector();
+
+  File? _image;
 
   @override
   void dispose() {
@@ -34,7 +39,15 @@ class _AuthScreenState extends State<AuthScreen> {
     _lastNameController.dispose();
     _firstNameController.dispose();
     _biographyController.dispose();
+    _dateNaissanceController.dispose();
     super.dispose();
+  }
+
+  Future<void> _pickAndSetImage() async {
+    final File? selectedImage = await _imageSelector.pickImage();
+    setState(() {
+      _image = selectedImage;
+    });
   }
 
   @override
@@ -80,9 +93,7 @@ class _AuthScreenState extends State<AuthScreen> {
                   if (_authFormType == AuthFormType.signUp)
                     ..._buildSignUpForm(),
                   SizedBox(height: SizeConfig.customSizeBox()),
-                  if (_authFormType ==
-                      AuthFormType
-                          .signUpTwo) // Hypothétique cas pour l'étape deux
+                  if (_authFormType == AuthFormType.signUpTwo)
                     ..._buildSignUpStepTwo(),
                   SizedBox(height: SizeConfig.customSizeBox()),
                 ],
@@ -169,16 +180,20 @@ class _AuthScreenState extends State<AuthScreen> {
 
   List<Widget> _buildSignUpStepTwo() {
     return [
-      // Ajoutez vos champs de formulaire pour l'étape deux ici
-
-      ImagePickerCircle(
-        onImageSelected: (File selectedImage) {
-          // Stockez l'image sélectionnée dans une variable d'état du widget parent
-          setState(() {
-            _selectedImageFile = selectedImage;
-          });
-          print("Fichier sélectionné : ${_selectedImageFile}");
-        },
+      InkWell(
+        onTap: _pickAndSetImage,
+        child: CircleAvatar(
+          radius: 60,
+          backgroundColor: Colors.grey[300],
+          backgroundImage: _image != null ? FileImage(_image!) : null,
+          child: _image == null
+              ? Icon(
+                  Icons.add,
+                  size: 50,
+                  color: Colors.white,
+                )
+              : null,
+        ),
       ),
 
       SizedBox(height: SizeConfig.customSizeBox()),
@@ -193,56 +208,28 @@ class _AuthScreenState extends State<AuthScreen> {
       CustomButtonSecondary(
         text: 'Terminé',
         onPressed: () async {
-          if (_emailController.text.isEmpty ||
-              _passwordController.text.isEmpty) {
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(content: Text("Email et mot de passe sont requis")),
-            );
-            return;
-          }
-
+          UserProfile newUserProfile = UserProfile(
+            uid: '',
+            email: _emailController.text.trim(),
+            firstName: _firstNameController.text.trim(),
+            lastName: _lastNameController.text.trim(),
+            biography: _biographyController.text.trim(),
+            dateNaissance: _dateNaissanceController.text.trim(),
+          );
           try {
-            // Étape 1: Inscription de l'utilisateur
-            final user = await _authService.signUp(
-              _emailController.text.trim(),
-              _passwordController.text.trim(),
+            await AuthService().signUp(
+              profile: newUserProfile,
+              password: _passwordController.text,
+              image: _image,
             );
 
-            if (user != null) {
-              String imageUrl = '';
-
-              // Étape 2: Upload de l'image de profil (si sélectionnée)
-              if (_selectedImageFile != null) {
-                print("Fichier sélectionné : ${_selectedImageFile}");
-                imageUrl = await _authService.uploadUserImage(
-                    _selectedImageFile!, user.uid);
-                print("URL de l'image : $imageUrl");
-              } else {
-                print("Aucun fichier d'image sélectionné.");
-              }
-
-              // Étape 3: Création du profil utilisateur
-              UserProfile newUserProfile = UserProfile(
-                uid: user.uid,
-                email: user.email!,
-                firstName: _firstNameController.text.trim(),
-                lastName: _lastNameController.text.trim(),
-                photoUrl:
-                    imageUrl, // sera vide si aucune image n'a été téléchargée
-                biography: _biographyController.text.trim(),
-              );
-
-              await _authService.createUserProfile(newUserProfile);
-
-              // Navigation vers l'écran d'accueil ou un écran de succès
-              Navigator.of(context).pushReplacement(MaterialPageRoute(
-                  builder: (_) =>
-                      AuthScreen())); // Assurez-vous d'avoir un HomeScreen.
-            }
+            // Navigation vers l'écran suivant ou affichage d'un message de succès
+            Navigator.of(context).pushReplacement(
+                MaterialPageRoute(builder: (_) => AuthScreen()));
           } catch (e) {
             // Gestion de l'erreur
             ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(content: Text(e.toString())),
+              SnackBar(content: Text("Erreur lors de l'inscription: $e")),
             );
           }
         },

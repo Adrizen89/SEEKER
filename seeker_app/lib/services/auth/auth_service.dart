@@ -5,42 +5,56 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'dart:io';
 
 class AuthService {
-  final FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
-  final _firebaseFirestore = FirebaseFirestore.instance;
+  final FirebaseAuth _auth = FirebaseAuth.instance;
+  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
-  Future<User?> signUp(String email, String password) async {
+  Future<void> signUp({
+    required UserProfile profile,
+    required File? image,
+    required String password,
+  }) async {
     try {
-      UserCredential result = await _firebaseAuth
-          .createUserWithEmailAndPassword(email: email, password: password);
-      return result.user;
-    } on FirebaseAuthException catch (e) {
-      // Gérer l'exception
-      throw _handleFirebaseAuthException(e);
+      // Étape 1: Inscription de l'utilisateur
+      final UserCredential userCredential =
+          await _auth.createUserWithEmailAndPassword(
+        email: profile.email.trim(),
+        password: password.trim(),
+      );
+      final User? user = userCredential.user;
+
+      if (user != null) {
+        String imageUrl = '';
+
+        // Étape 2: Upload de l'image de profil (si sélectionnée)
+        if (image != null) {
+          final Reference storageRef = FirebaseStorage.instance
+              .ref()
+              .child('user_images/${user.uid}.jpg');
+          final UploadTask uploadTask = storageRef.putFile(image);
+          await uploadTask;
+          imageUrl = await storageRef.getDownloadURL();
+        }
+
+        // Étape 3: Création du profil utilisateur
+        await _firestore.collection('users').doc(user.uid).set({
+          'uid': user.uid,
+          'email': profile.email.trim(),
+          'firstName': profile.firstName.trim(),
+          'lastName': profile.lastName.trim(),
+          'imageUrl': imageUrl,
+        });
+
+        print('Utilisateur inscrit avec succès.');
+      }
+    } catch (e) {
+      print('Erreur lors de l\'inscription: $e');
+      throw e; // Vous pouvez choisir de gérer l'erreur différemment
     }
-  }
-
-  Future<String> uploadUserImage(File imageFile, String userId) async {
-    Reference storageReference =
-        FirebaseStorage.instance.ref().child('user_images/$userId.jpg');
-
-    UploadTask uploadTask = storageReference.putFile(imageFile);
-    await uploadTask;
-
-    // Une fois le téléchargement terminé, récupérez et retournez l'URL de l'image.
-    String downloadUrl = await storageReference.getDownloadURL();
-    return downloadUrl;
-  }
-
-  Future<void> createUserProfile(UserProfile profile) async {
-    await _firebaseFirestore
-        .collection('users')
-        .doc(profile.uid)
-        .set(profile.toMap());
   }
 
   Future<User?> signIn(String email, String password) async {
     try {
-      UserCredential result = await _firebaseAuth.signInWithEmailAndPassword(
+      UserCredential result = await _auth.signInWithEmailAndPassword(
         email: email,
         password: password,
       );
@@ -52,7 +66,7 @@ class AuthService {
   }
 
   Future<void> signOut() async {
-    await _firebaseAuth.signOut();
+    await _auth.signOut();
   }
 
   Exception _handleFirebaseAuthException(FirebaseAuthException e) {

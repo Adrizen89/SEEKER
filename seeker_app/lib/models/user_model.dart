@@ -3,6 +3,7 @@ class UserProfile {
   final String email;
   final String firstName;
   final String lastName;
+  final String dateNaissance;
   final String? photoUrl;
   final String biography;
 
@@ -11,6 +12,7 @@ class UserProfile {
     required this.email,
     required this.firstName,
     required this.lastName,
+    required this.dateNaissance,
     this.photoUrl,
     required this.biography,
   });
@@ -21,6 +23,7 @@ class UserProfile {
       'email': email,
       'firstName': firstName,
       'lastName': lastName,
+      'dateNaissance': dateNaissance,
       'photoUrl': photoUrl,
       'biography': biography,
     };
@@ -31,6 +34,7 @@ class UserProfile {
     String? email,
     String? firstName,
     String? lastName,
+    String? dateNaissance,
     String? photoUrl,
     String? biography,
   }) {
@@ -39,6 +43,7 @@ class UserProfile {
       email: email ?? this.email,
       firstName: firstName ?? this.firstName,
       lastName: lastName ?? this.lastName,
+      dateNaissance: dateNaissance ?? this.dateNaissance,
       photoUrl: photoUrl ?? this.photoUrl,
       biography: biography ?? this.biography,
     );

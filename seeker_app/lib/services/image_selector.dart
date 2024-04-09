@@ -4,8 +4,10 @@ import 'package:image_picker/image_picker.dart';
 class ImageSelector {
   final ImagePicker _picker = ImagePicker();
 
-  Future<File?> pickImage(ImageSource source) async {
-    final pickedFile = await _picker.pickImage(source: source);
+  Future<File?> pickImage() async {
+    final XFile? pickedFile =
+        await _picker.pickImage(source: ImageSource.gallery);
+
     if (pickedFile != null) {
       return File(pickedFile.path);
     }
