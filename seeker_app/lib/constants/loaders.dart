@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:seeker_app/constants/colors.dart'; // Assurez-vous que le chemin d'accès est correct
 
-class CustomLoader {
+class CustomLoaderSign {
   static void showLoadingDialog(BuildContext context,
       {String message = "Chargement en cours..."}) {
     showDialog(

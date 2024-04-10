@@ -6,6 +6,7 @@ import 'package:seeker_app/helpers/validators.dart';
 import 'package:seeker_app/models/user_model.dart';
 import 'package:seeker_app/services/auth/auth_service.dart';
 import 'package:seeker_app/services/image_selector.dart';
+import 'package:seeker_app/views/map/home_map_screen.dart';
 import 'package:seeker_app/widgets/custom_buttons.dart';
 import 'package:seeker_app/widgets/custom_text.dart';
 import 'package:seeker_app/widgets/custom_textfield.dart';
@@ -134,19 +135,28 @@ class _AuthScreenState extends State<AuthScreen> {
                   text: 'Se connecter',
                   onPressed: () async {
                     if (_formKey.currentState!.validate()) {
+                      CustomLoaderSign.showLoadingDialog(context,
+                          message: "Connexion en cours...");
                       try {
                         final user = await _authService.signIn(
-                          // Assurez-vous d'avoir des TextEditingController pour récupérer ces valeurs
                           _emailController.text,
                           _passwordController.text,
                         );
                         if (user != null) {
                           print("Connexion réussie");
-                          // Naviguez vers votre écran d'accueil ou autre
+                          Navigator.of(context).pop();
+                          Navigator.of(context).pushReplacement(
+                              MaterialPageRoute(
+                                  builder: (_) => HomeMapScreen()));
                         }
                       } catch (e) {
+                        Navigator.of(context).pop();
                         print(e);
-                        // Affichez une erreur à l'utilisateur
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(
+                              content:
+                                  Text("Erreur lors de la connexion : $e")),
+                        );
                       }
                     }
                   }),
@@ -234,7 +244,7 @@ class _AuthScreenState extends State<AuthScreen> {
       CustomButtonSecondary(
         text: 'Terminé',
         onPressed: () async {
-          CustomLoader.showLoadingDialog(context,
+          CustomLoaderSign.showLoadingDialog(context,
               message: "Inscription en cours...");
           UserProfile newUserProfile = UserProfile(
             uid: '',
@@ -253,7 +263,7 @@ class _AuthScreenState extends State<AuthScreen> {
             Navigator.of(context).pop();
             // Navigation vers l'écran suivant ou affichage d'un message de succès
             Navigator.of(context).pushReplacement(
-                MaterialPageRoute(builder: (_) => AuthScreen()));
+                MaterialPageRoute(builder: (_) => HomeMapScreen()));
           } catch (e) {
             Navigator.of(context).pop();
             // Gestion de l'erreur
