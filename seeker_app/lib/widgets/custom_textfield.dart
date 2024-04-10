@@ -5,7 +5,7 @@ class CustomTextField extends StatelessWidget {
   final TextEditingController? controller;
   final String? hintText;
   final String? labelText;
-  final TextInputType keyboardType;
+  final TextInputType? keyboardType;
   final TextInputAction textInputAction;
   final bool obscureText;
   final IconData? icon;
@@ -17,7 +17,7 @@ class CustomTextField extends StatelessWidget {
     this.controller,
     this.hintText,
     this.labelText,
-    this.keyboardType = TextInputType.text,
+    this.keyboardType,
     this.textInputAction = TextInputAction.done,
     this.obscureText = false,
     this.icon,
@@ -32,6 +32,7 @@ class CustomTextField extends StatelessWidget {
           color: ColorSelect.normalFieldColor,
           borderRadius: BorderRadius.all(Radius.circular(10.0))),
       child: TextFormField(
+        keyboardType: keyboardType,
         controller: controller,
         decoration: InputDecoration(
           hintText: hintText,
@@ -47,7 +48,6 @@ class CustomTextField extends StatelessWidget {
             borderSide: BorderSide(color: Colors.red),
           ),
         ),
-        keyboardType: keyboardType,
         obscureText: obscureText,
         validator: validator,
       ),

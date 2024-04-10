@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:seeker_app/constants/colors.dart';
+import 'package:seeker_app/constants/loaders.dart';
 import 'package:seeker_app/constants/size.dart';
+import 'package:seeker_app/helpers/validators.dart';
 import 'package:seeker_app/models/user_model.dart';
 import 'package:seeker_app/services/auth/auth_service.dart';
 import 'package:seeker_app/services/image_selector.dart';
@@ -29,7 +31,7 @@ class _AuthScreenState extends State<AuthScreen> {
       TextEditingController();
 
   final ImageSelector _imageSelector = ImageSelector();
-
+  final _formKey = GlobalKey<FormState>();
   File? _image;
 
   @override
@@ -107,37 +109,49 @@ class _AuthScreenState extends State<AuthScreen> {
   List<Widget> _buildSignInForm() {
     // Retourner ici les widgets du formulaire de connexion
     return [
-      CustomTextField(
-        hintText: 'Email',
-        controller: _emailController,
-      ),
-      SizedBox(height: SizeConfig.customSizeBox()),
-      CustomTextField(
-        hintText: 'Mot de passe',
-        obscureText: true,
-        controller: _passwordController,
-      ),
-      SizedBox(height: SizeConfig.customSizeBox()),
-      CustomTextClick(text: 'Mot de passe oublié ?'),
-      SizedBox(height: SizeConfig.customSizeBox()),
-      CustomButtonSecondary(
-          text: 'Se connecter',
-          onPressed: () async {
-            try {
-              final user = await _authService.signIn(
-                // Assurez-vous d'avoir des TextEditingController pour récupérer ces valeurs
-                _emailController.text,
-                _passwordController.text,
-              );
-              if (user != null) {
-                print("Connexion réussie");
-                // Naviguez vers votre écran d'accueil ou autre
-              }
-            } catch (e) {
-              print(e);
-              // Affichez une erreur à l'utilisateur
-            }
-          }),
+      Form(
+          key: _formKey,
+          child: Column(
+            children: [
+              CustomTextField(
+                labelText: 'Votre Email',
+                hintText: 'Email',
+                controller: _emailController,
+                validator: validateEmail,
+              ),
+              SizedBox(height: SizeConfig.customSizeBox()),
+              CustomTextField(
+                labelText: 'Votre Mot de passe',
+                hintText: 'Mot de passe',
+                obscureText: true,
+                controller: _passwordController,
+                validator: validatePassword,
+              ),
+              SizedBox(height: SizeConfig.customSizeBox()),
+              CustomTextClick(text: 'Mot de passe oublié ?'),
+              SizedBox(height: SizeConfig.customSizeBox()),
+              CustomButtonSecondary(
+                  text: 'Se connecter',
+                  onPressed: () async {
+                    if (_formKey.currentState!.validate()) {
+                      try {
+                        final user = await _authService.signIn(
+                          // Assurez-vous d'avoir des TextEditingController pour récupérer ces valeurs
+                          _emailController.text,
+                          _passwordController.text,
+                        );
+                        if (user != null) {
+                          print("Connexion réussie");
+                          // Naviguez vers votre écran d'accueil ou autre
+                        }
+                      } catch (e) {
+                        print(e);
+                        // Affichez une erreur à l'utilisateur
+                      }
+                    }
+                  }),
+            ],
+          ))
     ];
   }
 
@@ -145,26 +159,38 @@ class _AuthScreenState extends State<AuthScreen> {
     // Retourner ici les widgets du formulaire d'inscription
     return [
       CustomTextField(
+        labelText: 'Votre Nom',
         hintText: 'Nom',
         controller: _lastNameController,
+        validator: validateLastName,
       ),
       SizedBox(height: SizeConfig.customSizeBox()),
       CustomTextField(
+        labelText: 'Votre Prénom',
         hintText: 'Prénom',
         controller: _firstNameController,
+        validator: validateFirstName,
       ),
       SizedBox(height: SizeConfig.customSizeBox()),
-      CustomTextField(hintText: 'Date de naissance'),
+      CustomTextField(
+        labelText: 'Votre Date de naissance',
+        hintText: 'Date de naissance',
+        keyboardType: TextInputType.datetime,
+      ),
       SizedBox(height: SizeConfig.customSizeBox()),
       CustomTextField(
+        labelText: 'Votre Email',
         hintText: 'Email',
         controller: _emailController,
+        validator: validateEmail,
       ),
       SizedBox(height: SizeConfig.customSizeBox()),
       CustomTextField(
+        labelText: 'Votre Mot de passe',
         hintText: 'Mot de passe',
         obscureText: true,
         controller: _passwordController,
+        validator: validatePassword,
       ),
       SizedBox(height: SizeConfig.customSizeBox()),
       CustomButtonSecondary(
@@ -208,6 +234,8 @@ class _AuthScreenState extends State<AuthScreen> {
       CustomButtonSecondary(
         text: 'Terminé',
         onPressed: () async {
+          CustomLoader.showLoadingDialog(context,
+              message: "Inscription en cours...");
           UserProfile newUserProfile = UserProfile(
             uid: '',
             email: _emailController.text.trim(),
@@ -222,11 +250,12 @@ class _AuthScreenState extends State<AuthScreen> {
               password: _passwordController.text,
               image: _image,
             );
-
+            Navigator.of(context).pop();
             // Navigation vers l'écran suivant ou affichage d'un message de succès
             Navigator.of(context).pushReplacement(
                 MaterialPageRoute(builder: (_) => AuthScreen()));
           } catch (e) {
+            Navigator.of(context).pop();
             // Gestion de l'erreur
             ScaffoldMessenger.of(context).showSnackBar(
               SnackBar(content: Text("Erreur lors de l'inscription: $e")),

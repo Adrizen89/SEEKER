@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:seeker_app/constants/colors.dart';
 import 'package:seeker_app/constants/size.dart';
 import 'package:seeker_app/views/auth/auth_screen.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -20,6 +21,7 @@ class MyApp extends StatelessWidget {
         debugShowCheckedModeBanner: false,
         title: 'Seeker',
         theme: ThemeData(
+          primaryColor: ColorSelect.mainColor,
           textTheme: GoogleFonts.montserratTextTheme(
             Theme.of(context).textTheme,
           ),
