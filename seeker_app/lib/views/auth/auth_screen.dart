@@ -261,7 +261,6 @@ class _AuthScreenState extends State<AuthScreen> {
               image: _image,
             );
             Navigator.of(context).pop();
-            // Navigation vers l'écran suivant ou affichage d'un message de succès
             Navigator.of(context).pushReplacement(
                 MaterialPageRoute(builder: (_) => HomeMapScreen()));
           } catch (e) {
