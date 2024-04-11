@@ -54,6 +54,11 @@
 <string>Votre message de demande de permission de la caméra ici</string>
 <key>NSPhotoLibraryUsageDescription</key>
 <string>Votre message de demande d'accès à la galerie ici</string>
+<key>NSLocationWhenInUseUsageDescription</key>
+<string>Besoin d'accéder à votre position pour afficher sur la carte</string>
+<key>NSLocationAlwaysUsageDescription</key>
+<string>Besoin d'accéder à votre position pour afficher sur la carte</string>
+
 
 </dict>
 </plist>
