@@ -6,7 +6,7 @@ import 'package:seeker_app/helpers/validators.dart';
 import 'package:seeker_app/models/user_model.dart';
 import 'package:seeker_app/services/auth/auth_service.dart';
 import 'package:seeker_app/services/image_selector.dart';
-import 'package:seeker_app/views/map/home_map_screen.dart';
+import 'package:seeker_app/views/settings/main_screen.dart';
 import 'package:seeker_app/widgets/custom_buttons.dart';
 import 'package:seeker_app/widgets/custom_text.dart';
 import 'package:seeker_app/widgets/custom_textfield.dart';
@@ -139,6 +139,7 @@ class _AuthScreenState extends State<AuthScreen> {
                           message: "Connexion en cours...");
                       try {
                         final user = await _authService.signIn(
+                          context,
                           _emailController.text,
                           _passwordController.text,
                         );
@@ -146,8 +147,7 @@ class _AuthScreenState extends State<AuthScreen> {
                           print("Connexion réussie");
                           Navigator.of(context).pop();
                           Navigator.of(context).pushReplacement(
-                              MaterialPageRoute(
-                                  builder: (_) => HomeMapScreen()));
+                              MaterialPageRoute(builder: (_) => MainScreen()));
                         }
                       } catch (e) {
                         Navigator.of(context).pop();
@@ -262,7 +262,7 @@ class _AuthScreenState extends State<AuthScreen> {
             );
             Navigator.of(context).pop();
             Navigator.of(context).pushReplacement(
-                MaterialPageRoute(builder: (_) => HomeMapScreen()));
+                MaterialPageRoute(builder: (_) => MainScreen()));
           } catch (e) {
             Navigator.of(context).pop();
             // Gestion de l'erreur

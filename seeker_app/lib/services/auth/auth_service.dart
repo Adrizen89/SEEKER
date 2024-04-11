@@ -3,6 +3,9 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:seeker_app/models/user_model.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'dart:io';
+import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:seeker_app/providers/user_data_provider.dart';
 
 class AuthService {
   final FirebaseAuth _auth = FirebaseAuth.instance;
@@ -52,15 +55,29 @@ class AuthService {
     }
   }
 
-  Future<User?> signIn(String email, String password) async {
+  Future<User?> signIn(
+      BuildContext context, String email, String password) async {
+    FirebaseAuth _auth = FirebaseAuth
+        .instance; // Assurez-vous que _auth est initialisé si ce n'est pas déjà fait ici
+
     try {
       UserCredential result = await _auth.signInWithEmailAndPassword(
         email: email,
         password: password,
       );
-      return result.user;
+      User? user = result.user;
+
+      if (user != null) {
+        // L'utilisateur est connecté, charger son profil
+        await Provider.of<UserProvider>(context, listen: false)
+            .loadUserProfile(user.uid);
+        // Vous pouvez ici naviguer vers la page d'accueil ou effectuer d'autres actions
+      }
+
+      return user;
     } catch (error) {
       print(error);
+      // Gérer l'erreur de connexion
       return null;
     }
   }

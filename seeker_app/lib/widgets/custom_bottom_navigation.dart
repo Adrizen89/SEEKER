@@ -24,11 +24,22 @@ class CustomBottomAppBar extends StatelessWidget {
             Container(
               decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(50),
-                  color: selectedIndex == 1
+                  color: selectedIndex == 0
                       ? ColorSelect.secondaryColor
                       : Colors.transparent),
               child: IconButton(
                 icon: Icon(Icons.map, color: ColorSelect.mainColor),
+                onPressed: () => onItemTapped(0),
+              ),
+            ),
+            Container(
+              decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(50),
+                  color: selectedIndex == 1
+                      ? ColorSelect.secondaryColor
+                      : Colors.transparent),
+              child: IconButton(
+                icon: Icon(Icons.book, color: ColorSelect.mainColor),
                 onPressed: () => onItemTapped(1),
               ),
             ),
@@ -39,19 +50,8 @@ class CustomBottomAppBar extends StatelessWidget {
                       ? ColorSelect.secondaryColor
                       : Colors.transparent),
               child: IconButton(
-                icon: Icon(Icons.book, color: ColorSelect.mainColor),
-                onPressed: () => onItemTapped(2),
-              ),
-            ),
-            Container(
-              decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(50),
-                  color: selectedIndex == 3
-                      ? ColorSelect.secondaryColor
-                      : Colors.transparent),
-              child: IconButton(
                 icon: Icon(Icons.person, color: ColorSelect.mainColor),
-                onPressed: () => onItemTapped(3),
+                onPressed: () => onItemTapped(2),
               ),
             )
           ],
