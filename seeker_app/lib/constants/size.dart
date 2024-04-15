@@ -37,5 +37,13 @@ class SizeConfig {
     return _blockSizeHorizontal * 7;
   }
 
+  static double customBtnLocationW() {
+    return _blockSizeHorizontal * 10;
+  }
+
+  static double customBtnLocationH() {
+    return _blockSizeVertical * 4.5;
+  }
+
   // Ajoutez d'autres méthodes pour calculer différentes dimensions (fontSize, margin, etc.) de manière similaire.
 }
