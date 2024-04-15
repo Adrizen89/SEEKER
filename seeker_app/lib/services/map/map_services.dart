@@ -1,36 +1,48 @@
-import 'package:location/location.dart';
 import 'package:latlong2/latlong.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:latlong2/latlong.dart';
+import 'package:flutter_map/flutter_map.dart';
+import 'package:flutter/material.dart';
 
-class LocationService {
-  final Location location = Location();
+class MapService {
+  final FirebaseFirestore _db = FirebaseFirestore.instance;
 
-  Future<LatLng?> getCurrentLocation() async {
-    bool serviceEnabled;
-    PermissionStatus permissionGranted;
-    LocationData locationData;
+  Future<void> saveMarker({
+    required String title,
+    required String description,
+    required LatLng position,
+  }) async {
+    String? userId = FirebaseAuth.instance.currentUser?.uid;
+    if (userId == null) throw Exception('Utilisateur non connecté');
 
-    // Vérifie si le service de localisation est activé.
-    serviceEnabled = await location.serviceEnabled();
-    if (!serviceEnabled) {
-      // Demande l'activation du service de localisation.
-      serviceEnabled = await location.requestService();
-      if (!serviceEnabled) {
-        return null;
-      }
+    await _db.collection('markers').add({
+      'userId': userId,
+      'title': title,
+      'description': description,
+      'latitude': position.latitude,
+      'longitude': position.longitude,
+      'timestamp': FieldValue.serverTimestamp(),
+    });
+  }
+
+  Future<List<Marker>> fetchUserMarkers() async {
+    var userId = FirebaseAuth.instance.currentUser?.uid;
+    if (userId == null) {
+      throw Exception('Utilisateur non connecté');
     }
+    var markersCollection =
+        _db.collection('markers').where('userId', isEqualTo: userId);
+    var querySnapshot = await markersCollection.get();
 
-    // Vérifie si les permissions de localisation sont accordées.
-    permissionGranted = await location.hasPermission();
-    if (permissionGranted == PermissionStatus.denied) {
-      // Demande la permission de localisation.
-      permissionGranted = await location.requestPermission();
-      if (permissionGranted != PermissionStatus.granted) {
-        return null;
-      }
-    }
-
-    // Obtient la localisation actuelle de l'utilisateur.
-    locationData = await location.getLocation();
-    return LatLng(locationData.latitude ?? 0.0, locationData.longitude ?? 0.0);
+    return querySnapshot.docs.map((doc) {
+      var data = doc.data() as Map<String, dynamic>;
+      return Marker(
+        width: 80.0,
+        height: 80.0,
+        point: LatLng(data['latitude'], data['longitude']),
+        child: Icon(Icons.location_on, color: Colors.red),
+      );
+    }).toList();
   }
 }
