@@ -37,6 +37,10 @@ class SizeConfig {
     return _blockSizeHorizontal * 7;
   }
 
+  static double customFontSizeText() {
+    return _blockSizeHorizontal * 4;
+  }
+
   static double customBtnLocationW() {
     return _blockSizeHorizontal * 10;
   }
