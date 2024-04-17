@@ -6,6 +6,7 @@ import 'package:seeker_app/providers/user_data_provider.dart';
 import 'package:seeker_app/services/image_selector.dart';
 import 'package:seeker_app/services/map/map_services.dart';
 import 'package:seeker_app/widgets/custom_buttons.dart';
+import 'package:seeker_app/widgets/custom_minimap.dart';
 import 'package:seeker_app/widgets/custom_text.dart';
 import 'package:seeker_app/widgets/custom_textfield.dart';
 import 'package:latlong2/latlong.dart';
@@ -188,6 +189,7 @@ class _MarkerDetailScreenState extends State<MarkerDetailScreen> {
                     height: SizeConfig.screenHeight * 0.2,
                     width: SizeConfig.screenWidth * 1,
                     color: ColorSelect.lastColor,
+                    child: MiniMap(position: widget.position),
                   ),
                   SizedBox(height: SizeConfig.customSizeBox()),
                   CustomButtonSecondary(
