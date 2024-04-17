@@ -8,7 +8,10 @@ import 'package:latlong2/latlong.dart';
 
 class MarkerDetailScreen extends StatefulWidget {
   final LatLng position;
-  const MarkerDetailScreen({super.key, required this.position});
+  const MarkerDetailScreen({
+    super.key,
+    required this.position,
+  });
 
   @override
   State<MarkerDetailScreen> createState() => _MarkerDetailScreenState();
@@ -63,6 +66,7 @@ class _MarkerDetailScreenState extends State<MarkerDetailScreen> {
                     // Titre
                     CustomTextField(
                       hintText: 'Nom de la découverte',
+                      controller: _titleController,
                     ),
                     SizedBox(
                       height: SizeConfig.customSizeBox(),
@@ -70,6 +74,7 @@ class _MarkerDetailScreenState extends State<MarkerDetailScreen> {
                     // Description
                     CustomTextField(
                       hintText: 'Description',
+                      controller: _descriptionController,
                     ),
                     SizedBox(
                       height: SizeConfig.customSizeBox(),
