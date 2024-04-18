@@ -1,12 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+
 import 'package:seeker_app/constants/colors.dart';
 import 'package:seeker_app/constants/size.dart';
+
 import 'package:seeker_app/models/discovery.dart';
 import 'package:seeker_app/providers/user_data_provider.dart';
 import 'package:seeker_app/services/discovery/discovery.dart';
 import 'package:seeker_app/views/discovery/detail_discovery_screen.dart';
 import 'package:seeker_app/widgets/custom_text.dart';
+
 
 class DiscoveryScreen extends StatefulWidget {
   const DiscoveryScreen({super.key});
