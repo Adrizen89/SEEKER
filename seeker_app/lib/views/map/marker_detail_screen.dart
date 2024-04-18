@@ -15,7 +15,10 @@ import 'package:provider/provider.dart';
 
 class MarkerDetailScreen extends StatefulWidget {
   final LatLng position;
-  const MarkerDetailScreen({super.key, required this.position});
+  const MarkerDetailScreen({
+    super.key,
+    required this.position,
+  });
 
   @override
   State<MarkerDetailScreen> createState() => _MarkerDetailScreenState();
