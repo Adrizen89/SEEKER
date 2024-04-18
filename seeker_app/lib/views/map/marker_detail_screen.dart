@@ -67,23 +67,42 @@ class _MarkerDetailScreenState extends State<MarkerDetailScreen> {
       return;
     }
 
-    List<String> imgUrls = [];
+    String? mainImgUrl;
+    List<String> additionalImgUrls = [];
+
+    // Upload de l'image principale
     if (_image != null) {
-      String? imageUrl = await _uploadImage(_image!);
-      if (imageUrl != null) imgUrls.add(imageUrl);
+      mainImgUrl = await _uploadImage(_image!);
+      if (mainImgUrl == null) {
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+            content: Text("Échec de l'upload de l'image principale.")));
+        return;
+      }
     }
 
+    // Upload des images supplémentaires
     for (File image in additionalImages) {
       String? imageUrl = await _uploadImage(image);
-      if (imageUrl != null) imgUrls.add(imageUrl);
+      if (imageUrl != null) {
+        additionalImgUrls.add(imageUrl);
+      } else {
+        // Gérer l'erreur d'upload
+        ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text("Échec de l'upload de certaines images.")));
+        return;
+      }
     }
 
+    // Sauvegarde dans Firestore
     try {
       await _mapService.saveMarker(
           title: _titleController.text,
           description: _descriptionController.text,
           position: widget.position,
-          imgUrls: imgUrls);
+          imgMain: mainImgUrl!, // URL de l'image principale
+          imgUrls:
+              additionalImgUrls // Liste des URLs des images supplémentaires
+          );
       Navigator.pop(context);
     } catch (e) {
       ScaffoldMessenger.of(context)

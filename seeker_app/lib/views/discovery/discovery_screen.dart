@@ -98,7 +98,7 @@ class _DiscoveryScreenState extends State<DiscoveryScreen> {
                                   decoration: BoxDecoration(
                                       image: DecorationImage(
                                           image: NetworkImage(
-                                            discovery.imgUrls![0],
+                                            discovery.imgMain!,
                                           ),
                                           fit: BoxFit.cover),
                                       color: ColorSelect.accentColor,

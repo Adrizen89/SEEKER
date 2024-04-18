@@ -7,6 +7,7 @@ class Discovery {
   DateTime? date;
   double? lat;
   double? lng;
+  String? imgMain;
   List<String>? imgUrls;
 
   Discovery({
@@ -16,6 +17,7 @@ class Discovery {
     this.date,
     this.lat,
     this.lng,
+    this.imgMain,
     this.imgUrls,
   });
 
@@ -39,6 +41,7 @@ class Discovery {
             : null,
         lat: data['latitude'] as double?,
         lng: data['longitude'] as double?,
+        imgMain: data['imgMain'] as String?,
         imgUrls: imgUrlsList,
       );
     } else {
@@ -50,8 +53,9 @@ class Discovery {
         date: DateTime.now(),
         lat: 0.0,
         lng: 0.0,
+        imgMain: '',
         imgUrls: [],
-      ); // Retournez un objet vide avec des valeurs par défaut
+      );
     }
   }
 }

@@ -40,6 +40,18 @@ class _DiscoveryDetailScreenState extends State<DiscoveryDetailScreen> {
     }
   }
 
+  Future<void> _pickAndSetMainImage() async {
+    final XFile? selectedImage =
+        await _picker.pickImage(source: ImageSource.gallery);
+    if (selectedImage != null) {
+      var imageUrl = await _imageService.uploadImage(
+          File(selectedImage.path), widget.discovery.id!); // Upload l'image
+      setState(() {
+        widget.discovery.imgMain = imageUrl;
+      });
+    }
+  }
+
   @override
   void initState() {
     super.initState();
@@ -58,7 +70,8 @@ class _DiscoveryDetailScreenState extends State<DiscoveryDetailScreen> {
       // Restaurez l'état initial
       _titleController.text = widget.discovery.title!;
       _descriptionController.text = widget.discovery.description!;
-      widget.discovery.imgUrls = List.from(originUrls);
+      widget.discovery.imgUrls =
+          List.from(originUrls); // Restaure les URLs originales
       _isEditing = false;
     });
   }
@@ -111,7 +124,7 @@ class _DiscoveryDetailScreenState extends State<DiscoveryDetailScreen> {
                 height: SizeConfig.screenHeight * 0.3,
                 width: SizeConfig.screenWidth * 1,
                 color: ColorSelect.mainColor,
-                child: (widget.discovery.imgUrls?.isNotEmpty) ?? false
+                child: (widget.discovery.imgMain?.isNotEmpty) ?? false
                     ? Image.network(
                         loadingBuilder: (BuildContext context, Widget child,
                             ImageChunkEvent? loadingProgress) {
@@ -127,7 +140,7 @@ class _DiscoveryDetailScreenState extends State<DiscoveryDetailScreen> {
                           );
                         },
                         fit: BoxFit.cover,
-                        widget.discovery.imgUrls![0],
+                        widget.discovery.imgMain!,
                         errorBuilder: (context, error, stackTrace) {
                           // Gestion des erreurs de chargement d'image
                           return Icon(Icons.image_not_supported,
@@ -180,43 +193,45 @@ class _DiscoveryDetailScreenState extends State<DiscoveryDetailScreen> {
                       height: 100,
                       child: ListView.builder(
                         scrollDirection: Axis.horizontal,
-                        itemCount: widget.discovery.imgUrls!.length - 1,
+                        itemCount: widget.discovery.imgUrls!.length,
                         itemBuilder: (context, index) => Padding(
                           padding: const EdgeInsets.only(right: 8.0),
                           child: Container(
-                              width: SizeConfig.screenWidth * 0.3,
+                              width: SizeConfig.screenWidth * 0.4,
                               child: _isEditing
                                   ? ListTile(
                                       trailing: IconButton(
                                         icon: Icon(Icons.edit),
                                         onPressed: () =>
-                                            _pickAndSetImageForIndex(index + 1),
+                                            _pickAndSetImageForIndex(index),
                                       ),
-                                      title: Image.network(
-                                          widget.discovery.imgUrls![index + 1],
-                                          width: 100,
-                                          fit: BoxFit.cover, loadingBuilder:
-                                              (BuildContext context,
-                                                  Widget child,
-                                                  ImageChunkEvent?
-                                                      loadingProgress) {
-                                        if (loadingProgress == null)
-                                          return child;
-                                        return Center(
-                                          child: CircularProgressIndicator(
-                                            color: ColorSelect.secondaryColor,
-                                            value: loadingProgress
-                                                        .expectedTotalBytes !=
-                                                    null
-                                                ? loadingProgress
-                                                        .cumulativeBytesLoaded /
-                                                    loadingProgress
-                                                        .expectedTotalBytes!
-                                                : null,
-                                          ),
-                                        );
-                                      }),
-                                    )
+                                      title: Container(
+                                        color: Colors.red,
+                                        child: Image.network(
+                                            widget.discovery.imgUrls![index],
+                                            width: 1000,
+                                            fit: BoxFit.cover, loadingBuilder:
+                                                (BuildContext context,
+                                                    Widget child,
+                                                    ImageChunkEvent?
+                                                        loadingProgress) {
+                                          if (loadingProgress == null)
+                                            return child;
+                                          return Center(
+                                            child: CircularProgressIndicator(
+                                              color: ColorSelect.secondaryColor,
+                                              value: loadingProgress
+                                                          .expectedTotalBytes !=
+                                                      null
+                                                  ? loadingProgress
+                                                          .cumulativeBytesLoaded /
+                                                      loadingProgress
+                                                          .expectedTotalBytes!
+                                                  : null,
+                                            ),
+                                          );
+                                        }),
+                                      ))
                                   : ListTile(
                                       title: Image.network(
                                           widget.discovery.imgUrls![index],
@@ -275,6 +290,11 @@ class _DiscoveryDetailScreenState extends State<DiscoveryDetailScreen> {
                     SizedBox(
                       height: SizeConfig.screenHeight * 0.03,
                     ),
+                    ElevatedButton(
+                        onPressed: () {
+                          _pickAndSetMainImage();
+                        },
+                        child: Text('Main')),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
