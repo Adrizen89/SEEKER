@@ -13,7 +13,7 @@ class UserProvider extends ChangeNotifier {
           lastName: '',
           dateNaissance: '',
           biography: '',
-          photoUrl: null,
+          photoUrl: '',
         );
 
   UserProfile get userProfile => _userProfile;
@@ -37,7 +37,7 @@ class UserProvider extends ChangeNotifier {
           lastName: userData['lastName'] ?? '',
           dateNaissance: userData['dateNaissance'] ?? '',
           biography: userData['biography'] ?? '',
-          photoUrl: userData['photoUrl'],
+          photoUrl: userData['photoUrl'] ?? '',
         ));
       } else {
         print("Aucun document trouvé pour l'uid : $uid");
