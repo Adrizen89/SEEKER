@@ -1,5 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:seeker_app/models/discoveries_model.dart';
+import 'package:seeker_app/models/discovery.dart';
 
 Stream<List<Discovery>> fetchDiscoveriesStream(String userId) {
   return FirebaseFirestore.instance

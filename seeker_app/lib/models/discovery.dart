@@ -1,13 +1,13 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class Discovery {
-  final String? id;
-  final String? title;
-  final String? description;
-  final DateTime? date;
-  final double? lat;
-  final double? lng;
-  final List<String>? imgUrls;
+  String? id;
+  String? title;
+  String? description;
+  DateTime? date;
+  double? lat;
+  double? lng;
+  List<String>? imgUrls;
 
   Discovery({
     this.id,

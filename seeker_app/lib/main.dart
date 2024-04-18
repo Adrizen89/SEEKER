@@ -30,7 +30,7 @@ class MyApp extends StatelessWidget {
           textTheme: GoogleFonts.montserratTextTheme(
             Theme.of(context).textTheme,
           ),
-          colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
+          colorScheme: ColorScheme.fromSeed(seedColor: ColorSelect.mainColor),
           useMaterial3: true,
         ),
         home: AuthScreen());

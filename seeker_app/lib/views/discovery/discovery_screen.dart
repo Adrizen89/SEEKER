@@ -10,7 +10,6 @@ import 'package:seeker_app/services/discovery/discovery.dart';
 import 'package:seeker_app/views/discovery/detail_discovery_screen.dart';
 import 'package:seeker_app/widgets/custom_text.dart';
 
-
 class DiscoveryScreen extends StatefulWidget {
   const DiscoveryScreen({super.key});
 
@@ -25,7 +24,27 @@ class _DiscoveryScreenState extends State<DiscoveryScreen> {
         Provider.of<UserProvider>(context, listen: false).userProfile.uid;
 
     return Scaffold(
-      backgroundColor: ColorSelect.grey100,
+      backgroundColor: ColorSelect.grey200,
+      appBar: AppBar(
+        elevation: 0,
+        actions: [
+          InkWell(
+            child: Container(
+              margin: EdgeInsets.only(right: SizeConfig.customMargin()),
+              width: SizeConfig.screenWidth * 0.12,
+              height: SizeConfig.screenHeight * 0.07,
+              decoration: BoxDecoration(
+                  color: ColorSelect.mainColor,
+                  borderRadius: BorderRadius.circular(20)),
+              child: Icon(
+                Icons.more_vert_rounded,
+                color: ColorSelect.secondaryColor,
+                size: SizeConfig.screenWidth * 0.07,
+              ),
+            ),
+          )
+        ],
+      ),
       body: StreamBuilder<List<Discovery>>(
         stream: fetchDiscoveriesStream(userId),
         builder: (context, snapshot) {
@@ -44,6 +63,7 @@ class _DiscoveryScreenState extends State<DiscoveryScreen> {
                 Discovery discovery = snapshot.data![index];
                 return Padding(
                     padding: EdgeInsets.only(
+                        top: SizeConfig.customPadding(),
                         left: SizeConfig.customPadding(),
                         right: SizeConfig.customPadding()),
                     child: InkWell(
