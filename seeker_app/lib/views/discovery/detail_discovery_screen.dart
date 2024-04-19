@@ -24,6 +24,7 @@ class _DiscoveryDetailScreenState extends State<DiscoveryDetailScreen> {
   late TextEditingController _titleController;
   late TextEditingController _descriptionController;
   List<String> originUrls = [];
+  late String originMainImage;
   bool _isEditing = false;
   final ImagePicker _picker = ImagePicker();
   final ImageSelector _imageService = ImageSelector();
@@ -33,10 +34,16 @@ class _DiscoveryDetailScreenState extends State<DiscoveryDetailScreen> {
         await _picker.pickImage(source: ImageSource.gallery);
     if (selectedImage != null) {
       var imageUrl = await _imageService.uploadImage(
-          File(selectedImage.path), widget.discovery.id!); // Upload l'image
-      setState(() {
-        widget.discovery.imgUrls![index] = imageUrl!;
-      });
+          File(selectedImage.path), widget.discovery.id!);
+      if (imageUrl != null) {
+        setState(() {
+          if (index >= widget.discovery.imgUrls!.length) {
+            widget.discovery.imgUrls!.add(imageUrl);
+          } else {
+            widget.discovery.imgUrls![index] = imageUrl;
+          }
+        });
+      }
     }
   }
 
@@ -45,7 +52,7 @@ class _DiscoveryDetailScreenState extends State<DiscoveryDetailScreen> {
         await _picker.pickImage(source: ImageSource.gallery);
     if (selectedImage != null) {
       var imageUrl = await _imageService.uploadImage(
-          File(selectedImage.path), widget.discovery.id!); // Upload l'image
+          File(selectedImage.path), widget.discovery.id!);
       setState(() {
         widget.discovery.imgMain = imageUrl;
       });
@@ -58,11 +65,8 @@ class _DiscoveryDetailScreenState extends State<DiscoveryDetailScreen> {
     _titleController = TextEditingController(text: widget.discovery.title);
     _descriptionController =
         TextEditingController(text: widget.discovery.description);
-    if (widget.discovery.imgUrls != null &&
-        widget.discovery.imgUrls!.length > 1) {
-      // Stockez toutes les URLs sauf la première (principale)
-      originUrls = widget.discovery.imgUrls!.sublist(1);
-    }
+    originUrls = List<String>.from(widget.discovery.imgUrls ?? []);
+    originMainImage = widget.discovery.imgMain ?? '';
   }
 
   void _cancelChanges() {
@@ -70,8 +74,8 @@ class _DiscoveryDetailScreenState extends State<DiscoveryDetailScreen> {
       // Restaurez l'état initial
       _titleController.text = widget.discovery.title!;
       _descriptionController.text = widget.discovery.description!;
-      widget.discovery.imgUrls =
-          List.from(originUrls); // Restaure les URLs originales
+      widget.discovery.imgUrls = List<String>.from(originUrls);
+      widget.discovery.imgMain = originMainImage;
       _isEditing = false;
     });
   }
