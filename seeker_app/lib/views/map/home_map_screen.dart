@@ -111,7 +111,7 @@ class _HomeMapScreenState extends State<HomeMapScreen> {
         mapController: _mapController,
         options: MapOptions(
           initialCenter: _currentPosition,
-          initialZoom: 13.0,
+          initialZoom: 20.0,
           onTap: _handleTap,
         ),
         children: [
