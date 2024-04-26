@@ -8,6 +8,8 @@ import 'package:seeker_app/models/user_model.dart';
 import 'package:seeker_app/providers/user_data_provider.dart';
 import 'package:seeker_app/widgets/custom_section_profil.dart';
 import 'package:seeker_app/widgets/custom_text.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 class ProfilScreen extends StatefulWidget {
   const ProfilScreen({super.key});
@@ -17,6 +19,34 @@ class ProfilScreen extends StatefulWidget {
 }
 
 class _ProfilScreenState extends State<ProfilScreen> {
+  int discoveriesCount = 0;
+
+  @override
+  void initState() {
+    super.initState();
+    fetchDiscoveriesCount();
+  }
+
+  void fetchDiscoveriesCount() async {
+    int count = await getNumberOfDiscoveries();
+    setState(() {
+      discoveriesCount = count;
+    });
+  }
+
+  Future<int> getNumberOfDiscoveries() async {
+    var user = FirebaseAuth.instance.currentUser;
+    if (user != null) {
+      var querySnapshot = await FirebaseFirestore.instance
+          .collection('markers')
+          .where('userId', isEqualTo: user.uid)
+          .get();
+      return querySnapshot.docs.length;
+    } else {
+      return 0;
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final userProfile = Provider.of<UserProvider>(context).userProfile;
@@ -37,7 +67,7 @@ class _ProfilScreenState extends State<ProfilScreen> {
                   Column(
                     children: [
                       CustomTitle(
-                        title: "56",
+                        title: "$discoveriesCount",
                         color: ColorSelect.lastColor,
                         fontsize: SizeConfig.customFontSizeTitle(),
                       ),
@@ -67,7 +97,11 @@ class _ProfilScreenState extends State<ProfilScreen> {
                 ],
               ),
             ),
-            SectionInfosPersos(),
+            SectionInfosPersos(
+              name: "${userProfile.firstName} ${userProfile.lastName}",
+              email: "${userProfile.email}",
+              dateNaissance: "${userProfile.dateNaissance}",
+            ),
             SectionPrefApp(),
             SectionParamsSecuConf()
           ],

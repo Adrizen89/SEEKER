@@ -5,7 +5,14 @@ import 'package:seeker_app/widgets/custom_text.dart';
 
 // SECTION INFORMATIONS PERSONNELLES
 class SectionInfosPersos extends StatefulWidget {
-  const SectionInfosPersos({super.key});
+  final String name;
+  final String email;
+  final String dateNaissance;
+  const SectionInfosPersos(
+      {super.key,
+      required this.name,
+      required this.email,
+      required this.dateNaissance});
 
   @override
   State<SectionInfosPersos> createState() => _SectionInfosPersosState();
@@ -62,7 +69,7 @@ class _SectionInfosPersosState extends State<SectionInfosPersos> {
                           children: [
                             Text("Nom / Prénom"),
                             CustomTitle(
-                              title: 'Adrien Berard',
+                              title: widget.name,
                               color: ColorSelect.mainColor,
                             )
                           ],
@@ -75,7 +82,7 @@ class _SectionInfosPersosState extends State<SectionInfosPersos> {
                           children: [
                             Text("Email"),
                             CustomTitle(
-                                title: 'adrien@gmail.com',
+                                title: widget.email,
                                 color: ColorSelect.mainColor)
                           ],
                         ),
@@ -87,7 +94,7 @@ class _SectionInfosPersosState extends State<SectionInfosPersos> {
                           children: [
                             Text("Date de naissance"),
                             CustomTitle(
-                                title: '27/08/2000',
+                                title: widget.dateNaissance,
                                 color: ColorSelect.mainColor)
                           ],
                         ),
