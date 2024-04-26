@@ -56,7 +56,8 @@ class _AuthScreenState extends State<AuthScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Padding(
+        body: SingleChildScrollView(
+      child: Padding(
           padding: EdgeInsets.all(SizeConfig.customPadding()),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -104,7 +105,7 @@ class _AuthScreenState extends State<AuthScreen> {
               _buildToggleButton(),
             ],
           )),
-    );
+    ));
   }
 
   List<Widget> _buildSignInForm() {
@@ -247,13 +248,13 @@ class _AuthScreenState extends State<AuthScreen> {
           CustomLoaderSign.showLoadingDialog(context,
               message: "Inscription en cours...");
           UserProfile newUserProfile = UserProfile(
-            uid: '',
-            email: _emailController.text.trim(),
-            firstName: _firstNameController.text.trim(),
-            lastName: _lastNameController.text.trim(),
-            biography: _biographyController.text.trim(),
-            dateNaissance: _dateNaissanceController.text.trim(),
-          );
+              uid: '',
+              email: _emailController.text.trim(),
+              firstName: _firstNameController.text.trim(),
+              lastName: _lastNameController.text.trim(),
+              biography: _biographyController.text.trim(),
+              dateNaissance: DateTime.now(),
+              dateRegister: DateTime.now());
           try {
             await AuthService().signUp(
               profile: newUserProfile,

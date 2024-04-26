@@ -45,6 +45,7 @@ class AuthService {
           'firstName': profile.firstName.trim(),
           'lastName': profile.lastName.trim(),
           'imageUrl': imageUrl,
+          'dateRegister': DateTime.now()
         });
 
         print('Utilisateur inscrit avec succès.');

@@ -10,6 +10,7 @@ import 'package:seeker_app/widgets/custom_section_profil.dart';
 import 'package:seeker_app/widgets/custom_text.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:intl/intl.dart';
 
 class ProfilScreen extends StatefulWidget {
   const ProfilScreen({super.key});
@@ -88,7 +89,8 @@ class _ProfilScreenState extends State<ProfilScreen> {
                             fontSize: SizeConfig.customFontSizeText()),
                       ),
                       CustomTitle(
-                        title: "27/08/2023",
+                        title:
+                            "${DateFormat('d/MM/yyyy').format(userProfile.dateRegister)}",
                         color: ColorSelect.lastColor,
                         fontsize: SizeConfig.customFontSizeTitle(),
                       ),

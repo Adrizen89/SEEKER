@@ -3,9 +3,10 @@ class UserProfile {
   final String email;
   final String firstName;
   final String lastName;
-  final String dateNaissance;
+  final DateTime dateNaissance;
   final String? photoUrl;
   final String biography;
+  final DateTime dateRegister;
 
   UserProfile({
     required this.uid,
@@ -15,6 +16,7 @@ class UserProfile {
     required this.dateNaissance,
     this.photoUrl,
     required this.biography,
+    required this.dateRegister,
   });
 
   Map<String, dynamic> toMap() {
@@ -26,6 +28,7 @@ class UserProfile {
       'dateNaissance': dateNaissance,
       'photoUrl': photoUrl,
       'biography': biography,
+      'dateRegister': DateTime.now()
     };
   }
 
@@ -34,9 +37,10 @@ class UserProfile {
     String? email,
     String? firstName,
     String? lastName,
-    String? dateNaissance,
+    DateTime? dateNaissance,
     String? photoUrl,
     String? biography,
+    DateTime? dateRegister,
   }) {
     return UserProfile(
       uid: uid ?? this.uid,
@@ -46,6 +50,7 @@ class UserProfile {
       dateNaissance: dateNaissance ?? this.dateNaissance,
       photoUrl: photoUrl ?? this.photoUrl,
       biography: biography ?? this.biography,
+      dateRegister: dateRegister ?? this.dateRegister,
     );
   }
 }
