@@ -30,4 +30,16 @@ class ImageSelector {
       return null;
     }
   }
+
+  Future<void> deleteImage(String imageUrl) async {
+    try {
+      // Convertir l'URL de l'image en une référence de Firebase Storage
+      Reference ref = _storage.refFromURL(imageUrl);
+
+      // Supprimer le fichier
+      await ref.delete();
+    } catch (e) {
+      print("Erreur lors de la suppression de l'image: $e");
+    }
+  }
 }
