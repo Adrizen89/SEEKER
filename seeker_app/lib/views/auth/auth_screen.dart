@@ -12,6 +12,7 @@ import 'package:seeker_app/widgets/custom_text.dart';
 import 'package:seeker_app/widgets/custom_textfield.dart';
 import 'package:seeker_app/constants/assets.dart';
 import 'dart:io';
+import 'package:intl/intl.dart';
 
 enum AuthFormType { signIn, signUp, signUpTwo }
 
@@ -28,12 +29,11 @@ class _AuthScreenState extends State<AuthScreen> {
   final TextEditingController _lastNameController = TextEditingController();
   final TextEditingController _firstNameController = TextEditingController();
   final TextEditingController _biographyController = TextEditingController();
-  final TextEditingController _dateNaissanceController =
-      TextEditingController();
 
   final ImageSelector _imageSelector = ImageSelector();
   final _formKey = GlobalKey<FormState>();
   File? _image;
+  TextEditingController dateInputController = TextEditingController();
 
   @override
   void dispose() {
@@ -42,7 +42,7 @@ class _AuthScreenState extends State<AuthScreen> {
     _lastNameController.dispose();
     _firstNameController.dispose();
     _biographyController.dispose();
-    _dateNaissanceController.dispose();
+    dateInputController.dispose();
     super.dispose();
   }
 
@@ -53,13 +53,27 @@ class _AuthScreenState extends State<AuthScreen> {
     });
   }
 
+  Future<void> _selectDate(BuildContext context) async {
+    final DateTime? picked = await showDatePicker(
+      context: context,
+      initialDate: DateTime.now(),
+      firstDate: DateTime(1900),
+      lastDate: DateTime(2050),
+    );
+    if (picked != null) {
+      setState(() {
+        dateInputController.text = DateFormat('dd/MM/yyyy').format(picked);
+      });
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Padding(
+        body: SingleChildScrollView(
+      child: Padding(
           padding: EdgeInsets.all(SizeConfig.customPadding()),
           child: Column(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Container(child: Image.asset(Assets.logoFull)),
               _authFormType == AuthFormType.signUpTwo
@@ -89,7 +103,7 @@ class _AuthScreenState extends State<AuthScreen> {
                           ? 'Se connecter'
                           : 'S\'inscrire'),
               Column(
-                mainAxisAlignment: MainAxisAlignment.center,
+                mainAxisAlignment: MainAxisAlignment.end,
                 children: <Widget>[
                   if (_authFormType == AuthFormType.signIn)
                     ..._buildSignInForm(),
@@ -104,7 +118,7 @@ class _AuthScreenState extends State<AuthScreen> {
               _buildToggleButton(),
             ],
           )),
-    );
+    ));
   }
 
   List<Widget> _buildSignInForm() {
@@ -113,7 +127,12 @@ class _AuthScreenState extends State<AuthScreen> {
       Form(
           key: _formKey,
           child: Column(
+            mainAxisAlignment: MainAxisAlignment.end,
+            crossAxisAlignment: CrossAxisAlignment.center,
             children: [
+              SizedBox(
+                height: SizeConfig.customSizeBox(),
+              ),
               CustomTextField(
                 labelText: 'Votre Email',
                 hintText: 'Email',
@@ -168,6 +187,9 @@ class _AuthScreenState extends State<AuthScreen> {
   List<Widget> _buildSignUpForm() {
     // Retourner ici les widgets du formulaire d'inscription
     return [
+      SizedBox(
+        height: SizeConfig.customSizeBox(),
+      ),
       CustomTextField(
         labelText: 'Votre Nom',
         hintText: 'Nom',
@@ -185,7 +207,10 @@ class _AuthScreenState extends State<AuthScreen> {
       CustomTextField(
         labelText: 'Votre Date de naissance',
         hintText: 'Date de naissance',
-        keyboardType: TextInputType.datetime,
+        controller: dateInputController,
+        onTap: () {
+          _selectDate(context);
+        },
       ),
       SizedBox(height: SizeConfig.customSizeBox()),
       CustomTextField(
@@ -246,14 +271,23 @@ class _AuthScreenState extends State<AuthScreen> {
         onPressed: () async {
           CustomLoaderSign.showLoadingDialog(context,
               message: "Inscription en cours...");
+          DateFormat format = DateFormat("dd/MM/yyyy");
+          DateTime? dateNaissance;
+
+          try {
+            dateNaissance = format.parse(dateInputController.text.trim());
+          } catch (e) {
+            print("Erreur de formatage de la date: $e");
+            // Gérer l'erreur de formatage ici, par exemple en informant l'utilisateur
+          }
           UserProfile newUserProfile = UserProfile(
-            uid: '',
-            email: _emailController.text.trim(),
-            firstName: _firstNameController.text.trim(),
-            lastName: _lastNameController.text.trim(),
-            biography: _biographyController.text.trim(),
-            dateNaissance: _dateNaissanceController.text.trim(),
-          );
+              uid: '',
+              email: _emailController.text.trim(),
+              firstName: _firstNameController.text.trim(),
+              lastName: _lastNameController.text.trim(),
+              biography: _biographyController.text.trim(),
+              dateNaissance: dateNaissance!,
+              dateRegister: DateTime.now());
           try {
             await AuthService().signUp(
               profile: newUserProfile,

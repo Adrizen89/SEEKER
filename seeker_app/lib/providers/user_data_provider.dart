@@ -11,9 +11,10 @@ class UserProvider extends ChangeNotifier {
           email: '',
           firstName: '',
           lastName: '',
-          dateNaissance: '',
+          dateNaissance: DateTime(2000, 1, 1),
           biography: '',
-          photoUrl: null,
+          photoUrl: '',
+          dateRegister: DateTime.now(),
         );
 
   UserProfile get userProfile => _userProfile;
@@ -31,14 +32,14 @@ class UserProvider extends ChangeNotifier {
         print("Document récupéré : ${userDoc.data()}");
         Map<String, dynamic> userData = userDoc.data() as Map<String, dynamic>;
         setUserProfile(UserProfile(
-          uid: uid,
-          email: userData['email'] ?? '',
-          firstName: userData['firstName'] ?? '',
-          lastName: userData['lastName'] ?? '',
-          dateNaissance: userData['dateNaissance'] ?? '',
-          biography: userData['biography'] ?? '',
-          photoUrl: userData['photoUrl'],
-        ));
+            uid: uid,
+            email: userData['email'] ?? '',
+            firstName: userData['firstName'] ?? '',
+            lastName: userData['lastName'] ?? '',
+            dateNaissance: userData['dateNaissance'] ?? '',
+            biography: userData['biography'] ?? '',
+            photoUrl: userData['photoUrl'] ?? '',
+            dateRegister: userData['dateRegister'] ?? ''));
       } else {
         print("Aucun document trouvé pour l'uid : $uid");
       }
