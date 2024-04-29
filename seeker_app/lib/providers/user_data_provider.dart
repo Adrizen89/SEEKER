@@ -11,7 +11,7 @@ class UserProvider extends ChangeNotifier {
           email: '',
           firstName: '',
           lastName: '',
-          dateNaissance: DateTime.now(),
+          dateNaissance: DateTime(2000, 1, 1),
           biography: '',
           photoUrl: '',
           dateRegister: DateTime.now(),

@@ -54,7 +54,6 @@ class CustomTextField extends StatelessWidget {
         ),
         obscureText: obscureText,
         validator: validator,
-        readOnly: readOnly!,
         onTap: onTap,
       ),
     );
