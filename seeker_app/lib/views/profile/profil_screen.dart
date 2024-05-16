@@ -6,6 +6,7 @@ import 'package:seeker_app/constants/colors.dart';
 import 'package:seeker_app/constants/size.dart';
 import 'package:seeker_app/models/user_model.dart';
 import 'package:seeker_app/providers/user_data_provider.dart';
+import 'package:seeker_app/views/profile/modify_profil_screen.dart';
 import 'package:seeker_app/widgets/custom_section_profil.dart';
 import 'package:seeker_app/widgets/custom_text.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -51,7 +52,6 @@ class _ProfilScreenState extends State<ProfilScreen> {
   @override
   Widget build(BuildContext context) {
     final userProfile = Provider.of<UserProvider>(context).userProfile;
-
     return Scaffold(
       body: SingleChildScrollView(
         child: Column(
@@ -102,7 +102,8 @@ class _ProfilScreenState extends State<ProfilScreen> {
             SectionInfosPersos(
               name: "${userProfile.firstName} ${userProfile.lastName}",
               email: "${userProfile.email}",
-              dateNaissance: "${userProfile.dateNaissance}",
+              dateNaissance:
+                  "${DateFormat('d/MM/yyyy').format(userProfile.dateNaissance)}",
             ),
             SectionPrefApp(),
             SectionParamsSecuConf()
@@ -127,10 +128,17 @@ class _ProfilScreenState extends State<ProfilScreen> {
               CircleAvatar(
                 backgroundColor: ColorSelect.secondaryColor,
                 radius: SizeConfig.screenWidth * 0.15,
-                child: CircleAvatar(radius: SizeConfig.screenWidth * 0.14),
+                child: CircleAvatar(
+                  radius: SizeConfig.screenWidth * 0.14,
+                  backgroundImage: NetworkImage("${userProfile.imageUrl}"),
+                ),
               ),
               GestureDetector(
-                  onTap: () {},
+                  onTap: () {
+                    print("URL : ${userProfile.imageUrl}");
+                    Navigator.of(context).push(MaterialPageRoute(
+                        builder: (context) => ModifyProfilScreen()));
+                  },
                   child: Container(
                     decoration: BoxDecoration(boxShadow: [
                       BoxShadow(

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:seeker_app/constants/colors.dart';
 import 'package:seeker_app/constants/size.dart';
+import 'package:seeker_app/providers/them_provider.dart';
 import 'package:seeker_app/providers/user_data_provider.dart';
 import 'package:seeker_app/views/auth/auth_screen.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -22,17 +23,15 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     SizeConfig.init(context);
-    return MaterialApp(
-        debugShowCheckedModeBanner: false,
-        title: 'Seeker',
-        theme: ThemeData(
-          primaryColor: ColorSelect.mainColor,
-          textTheme: GoogleFonts.montserratTextTheme(
-            Theme.of(context).textTheme,
-          ),
-          colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
-          useMaterial3: true,
-        ),
-        home: AuthScreen());
+    return ChangeNotifierProvider(
+        create: (context) => ThemeProvider(),
+        child: Consumer<ThemeProvider>(
+            builder: (context, theme, _) => MaterialApp(
+                title: 'Seeker',
+                theme: ThemeData(
+                  brightness:
+                      theme.darkMode ? Brightness.dark : Brightness.light,
+                ),
+                home: AuthScreen())));
   }
 }

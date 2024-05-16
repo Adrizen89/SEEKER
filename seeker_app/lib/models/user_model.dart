@@ -4,7 +4,7 @@ class UserProfile {
   final String firstName;
   final String lastName;
   final DateTime dateNaissance;
-  final String? photoUrl;
+  final String? imageUrl;
   final String biography;
   final DateTime dateRegister;
 
@@ -14,7 +14,7 @@ class UserProfile {
     required this.firstName,
     required this.lastName,
     required this.dateNaissance,
-    this.photoUrl,
+    this.imageUrl,
     required this.biography,
     required this.dateRegister,
   });
@@ -26,7 +26,7 @@ class UserProfile {
       'firstName': firstName,
       'lastName': lastName,
       'dateNaissance': dateNaissance,
-      'photoUrl': photoUrl,
+      'imageUrl': imageUrl,
       'biography': biography,
       'dateRegister': DateTime.now()
     };
@@ -38,7 +38,7 @@ class UserProfile {
     String? firstName,
     String? lastName,
     DateTime? dateNaissance,
-    String? photoUrl,
+    String? imageUrl,
     String? biography,
     DateTime? dateRegister,
   }) {
@@ -48,7 +48,7 @@ class UserProfile {
       firstName: firstName ?? this.firstName,
       lastName: lastName ?? this.lastName,
       dateNaissance: dateNaissance ?? this.dateNaissance,
-      photoUrl: photoUrl ?? this.photoUrl,
+      imageUrl: imageUrl ?? this.imageUrl,
       biography: biography ?? this.biography,
       dateRegister: dateRegister ?? this.dateRegister,
     );

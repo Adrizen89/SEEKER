@@ -46,7 +46,8 @@ class AuthService {
           'lastName': profile.lastName.trim(),
           'imageUrl': imageUrl,
           'dateNaissance': profile.dateNaissance,
-          'dateRegister': DateTime.now()
+          'dateRegister': DateTime.now(),
+          'biography': profile.biography,
         });
 
         print('Utilisateur inscrit avec succès.');
@@ -86,6 +87,47 @@ class AuthService {
 
   Future<void> signOut() async {
     await _auth.signOut();
+  }
+
+  Future<void> resetPassword(String email, BuildContext context) async {
+    if (email.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+            content: Text(
+                "Veuillez entrer votre email pour réinitialiser votre mot de passe.")),
+      );
+      return;
+    }
+    try {
+      await FirebaseAuth.instance.sendPasswordResetEmail(email: email);
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+            content: Text(
+                "Un email de réinitialisation de mot de passe a été envoyé.")),
+      );
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+            content: Text(
+                "Erreur lors de l'envoi de l'email. Vérifiez l'email et réessayez.")),
+      );
+    }
+  }
+
+  Future<void> updateEmail(BuildContext context, String newEmail) async {
+    if (newEmail.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text("L'email ne peut pas être vide.")));
+      return;
+    }
+    try {
+      await FirebaseAuth.instance.currentUser!.updateEmail(newEmail);
+      ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text("Email mis à jour avec succès.")));
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+          content: Text("Erreur lors de la mise à jour de l'email : $e")));
+    }
   }
 
   Exception _handleFirebaseAuthException(FirebaseAuthException e) {
