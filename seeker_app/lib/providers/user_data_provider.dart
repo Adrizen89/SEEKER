@@ -13,7 +13,7 @@ class UserProvider extends ChangeNotifier {
           lastName: '',
           dateNaissance: DateTime(2000, 1, 1),
           biography: '',
-          photoUrl: '',
+          imageUrl: '',
           dateRegister: DateTime.now(),
         );
 
@@ -31,15 +31,26 @@ class UserProvider extends ChangeNotifier {
       if (userDoc.exists) {
         print("Document récupéré : ${userDoc.data()}");
         Map<String, dynamic> userData = userDoc.data() as Map<String, dynamic>;
+        print("${userData['imageUrl']}");
+
+        // Convertir les Timestamps en DateTime
+        DateTime dateNaissance =
+            (userData['dateNaissance'] as Timestamp?)?.toDate() ??
+                DateTime.now(); // Valeur par défaut si null
+        DateTime dateRegister =
+            (userData['dateRegister'] as Timestamp?)?.toDate() ??
+                DateTime.now(); // Valeur par défaut si null
+
         setUserProfile(UserProfile(
-            uid: uid,
-            email: userData['email'] ?? '',
-            firstName: userData['firstName'] ?? '',
-            lastName: userData['lastName'] ?? '',
-            dateNaissance: userData['dateNaissance'] ?? '',
-            biography: userData['biography'] ?? '',
-            photoUrl: userData['photoUrl'] ?? '',
-            dateRegister: userData['dateRegister'] ?? ''));
+          uid: uid,
+          email: userData['email'] ?? '',
+          firstName: userData['firstName'] ?? '',
+          lastName: userData['lastName'] ?? '',
+          dateNaissance: dateNaissance,
+          biography: userData['biography'] ?? '',
+          imageUrl: userData['imageUrl'] ?? '',
+          dateRegister: dateRegister,
+        ));
       } else {
         print("Aucun document trouvé pour l'uid : $uid");
       }
