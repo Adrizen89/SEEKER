@@ -30,7 +30,7 @@ class SizeConfig {
   }
 
   static double customFontSizeButton() {
-    return _blockSizeHorizontal * 4;
+    return _blockSizeHorizontal * 3.5;
   }
 
   static double customFontSizeTitle() {

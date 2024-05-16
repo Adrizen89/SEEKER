@@ -12,6 +12,7 @@ class MapService {
     required String title,
     required String description,
     required LatLng position,
+    required String imgMain,
     required List<String> imgUrls,
   }) async {
     String? userId = FirebaseAuth.instance.currentUser?.uid;
@@ -24,6 +25,7 @@ class MapService {
       'latitude': position.latitude,
       'longitude': position.longitude,
       'timestamp': FieldValue.serverTimestamp(),
+      'imgMain': imgMain,
       'imgUrls': imgUrls,
     });
   }
