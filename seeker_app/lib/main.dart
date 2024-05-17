@@ -27,6 +27,7 @@ class MyApp extends StatelessWidget {
         create: (context) => ThemeProvider(),
         child: Consumer<ThemeProvider>(
             builder: (context, theme, _) => MaterialApp(
+                debugShowCheckedModeBanner: false,
                 title: 'Seeker',
                 theme: ThemeData(
                   brightness:

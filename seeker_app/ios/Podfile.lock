@@ -1142,11 +1142,10 @@ PODS:
     - FlutterMacOS
   - PromisesObjC (2.4.0)
   - RecaptchaInterop (100.0.0)
-<<<<<<< HEAD
   - shared_preferences_foundation (0.0.1):
-=======
+    - Flutter
+    - FlutterMacOS
   - sqflite (0.0.3):
->>>>>>> feature/discoveryscreen
     - Flutter
     - FlutterMacOS
 
@@ -1160,11 +1159,8 @@ DEPENDENCIES:
   - image_picker_ios (from `.symlinks/plugins/image_picker_ios/ios`)
   - location (from `.symlinks/plugins/location/ios`)
   - path_provider_foundation (from `.symlinks/plugins/path_provider_foundation/darwin`)
-<<<<<<< HEAD
   - shared_preferences_foundation (from `.symlinks/plugins/shared_preferences_foundation/darwin`)
-=======
   - sqflite (from `.symlinks/plugins/sqflite/darwin`)
->>>>>>> feature/discoveryscreen
 
 SPEC REPOS:
   trunk:
@@ -1209,13 +1205,10 @@ EXTERNAL SOURCES:
     :path: ".symlinks/plugins/location/ios"
   path_provider_foundation:
     :path: ".symlinks/plugins/path_provider_foundation/darwin"
-<<<<<<< HEAD
   shared_preferences_foundation:
     :path: ".symlinks/plugins/shared_preferences_foundation/darwin"
-=======
   sqflite:
     :path: ".symlinks/plugins/sqflite/darwin"
->>>>>>> feature/discoveryscreen
 
 SPEC CHECKSUMS:
   abseil: d121da9ef7e2ff4cab7666e76c5a3e0915ae08c3
@@ -1248,11 +1241,8 @@ SPEC CHECKSUMS:
   path_provider_foundation: 3784922295ac71e43754bd15e0653ccfd36a147c
   PromisesObjC: f5707f49cb48b9636751c5b2e7d227e43fba9f47
   RecaptchaInterop: 7d1a4a01a6b2cb1610a47ef3f85f0c411434cb21
-<<<<<<< HEAD
   shared_preferences_foundation: b4c3b4cddf1c21f02770737f147a3f5da9d39695
-=======
   sqflite: 673a0e54cc04b7d6dba8d24fb8095b31c3a99eec
->>>>>>> feature/discoveryscreen
 
 PODFILE CHECKSUM: 7be2f5f74864d463a8ad433546ed1de7e0f29aef
 
